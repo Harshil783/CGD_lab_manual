@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 01 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 01</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 01 / 13</div>
+        <h1>Basic Graphics Functions</h1>
+        
+      </section>
+      <section class="part" id="part-1">
+          
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To study and use the basic graphics functions (line, rectangle, circle, ellipse, arc, bar, polygon, pieslice, outtextxy) of the C/C++ graphics library.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-1-1">Copy code</button></div>
+            <pre id="code-1-1"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+
+int main() {
+  int gd = DETECT, gm;
+  int poly[] = {380, 240, 440, 320, 320, 320, 380, 240};
+
+  initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+
+  // Line
+  setcolor(WHITE);
+  line(50, 60, 200, 60);
+  outtextxy(50, 40, &quot;line&quot;);
+
+  // Rectangle
+  setcolor(YELLOW);
+  rectangle(50, 100, 200, 180);
+  outtextxy(50, 85, &quot;rectangle&quot;);
+
+  // Circle
+  setcolor(GREEN);
+  circle(300, 140, 40);
+  outtextxy(280, 85, &quot;circle&quot;);
+
+  // Ellipse
+  setcolor(CYAN);
+  ellipse(450, 140, 0, 360, 70, 35);
+  outtextxy(430, 85, &quot;ellipse&quot;);
+
+  // Arc
+  setcolor(MAGENTA);
+  arc(100, 280, 0, 180, 50);
+  outtextxy(80, 295, &quot;arc&quot;);
+
+  // Bar
+  setcolor(RED);
+  setfillstyle(SOLID_FILL, RED);
+  bar(200, 240, 280, 320);
+  outtextxy(215, 330, &quot;bar&quot;);
+
+
+
+
+    // Polygon
+    setcolor(LIGHTBLUE);
+    drawpoly(4, poly);
+    outtextxy(350, 330, &quot;drawpoly&quot;);
+
+    // Pie slice
+    setcolor(WHITE);
+    setfillstyle(HATCH_FILL, LIGHTGREEN);
+    pieslice(550, 290, 0, 120, 50);
+    outtextxy(520, 330, &quot;pieslice&quot;);
+
+    outtextxy(200, 400, &quot;Basic Graphics Functions&quot;);
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>The graphics window displays a line, rectangle, circle, ellipse, arc, bar, polygon and pie slice, each with its label.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><span class="nav-btn disabled">← Previous</span><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-02.html">Practical 02 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 01</div></footer>
+</body>
+</html>

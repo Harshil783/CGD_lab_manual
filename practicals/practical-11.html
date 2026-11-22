@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 11 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 11</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 11 / 13</div>
+        <h1>Demonstrate Clipping on Different Shapes using OpenGL</h1>
+        
+      </section>
+      <section class="part" id="part-1">
+          
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To demonstrate clipping on different shapes (circle and triangle) using OpenGL clip planes.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-11-1">Copy code</button></div>
+            <pre id="code-11-1"><code>#include &lt;GL/glut.h&gt;
+#include &lt;math.h&gt;
+
+// Draws a circle and a triangle; colours depend on whether clipping is on
+void drawShapes(int clipped) {
+   int i;
+
+    if (clipped) glColor3f(1.0f, 0.0f, 0.0f);
+    else       glColor3f(0.35f, 0.35f, 0.35f);
+    glBegin(GL_TRIANGLE_FAN);
+       glVertex2f(0.2f, 0.1f);
+       for (i = 0; i &lt;= 360; i += 10)
+          glVertex2f(0.2f + 0.7f * (float) cos(i * 3.14159 / 180.0),
+                 0.1f + 0.7f * (float) sin(i * 3.14159 / 180.0));
+    glEnd();
+
+    if (clipped) glColor3f(0.0f, 1.0f, 0.0f);
+    else      glColor3f(0.55f, 0.55f, 0.55f);
+    glBegin(GL_TRIANGLES);
+       glVertex2f(-0.9f, -0.6f);
+       glVertex2f( 0.9f, -0.4f);
+       glVertex2f( 0.0f, 0.9f);
+    glEnd();
+}
+
+void display() {
+  // Clip plane equations: A*x + B*y + C*z + D &gt;= 0 is kept
+  GLdouble left[] = { 1.0, 0.0, 0.0, 0.5}; // x &gt;= -0.5
+  GLdouble right[] = {-1.0, 0.0, 0.0, 0.5}; // x &lt;= 0.5
+  GLdouble bottom[] = { 0.0, 1.0, 0.0, 0.5}; // y &gt;= -0.5
+  GLdouble top[] = { 0.0, -1.0, 0.0, 0.5}; // y &lt;= 0.5
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    // 1. Shapes without clipping (grey)
+    drawShapes(0);
+
+    // 2. Same shapes clipped to the window (coloured)
+    glClipPlane(GL_CLIP_PLANE0, left);
+    glClipPlane(GL_CLIP_PLANE1, right);
+
+
+
+    glClipPlane(GL_CLIP_PLANE2, bottom);
+    glClipPlane(GL_CLIP_PLANE3, top);
+    glEnable(GL_CLIP_PLANE0);
+    glEnable(GL_CLIP_PLANE1);
+    glEnable(GL_CLIP_PLANE2);
+    glEnable(GL_CLIP_PLANE3);
+    drawShapes(1);
+    glDisable(GL_CLIP_PLANE0);
+    glDisable(GL_CLIP_PLANE1);
+    glDisable(GL_CLIP_PLANE2);
+    glDisable(GL_CLIP_PLANE3);
+
+    // 3. Clipping window border
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+       glVertex2f(-0.5f, -0.5f);
+       glVertex2f( 0.5f, -0.5f);
+       glVertex2f( 0.5f, 0.5f);
+       glVertex2f(-0.5f, 0.5f);
+    glEnd();
+
+    glFlush();
+}
+
+int main(int argc, char** argv) {
+  glutInit(&amp;argc, argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  glutInitWindowSize(500, 500);
+  glutCreateWindow(&quot;Clipping on Different Shapes&quot;);
+
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1, 1, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>The shapes are drawn in grey without clipping. The parts of the shapes inside the yellow clipping window are redrawn in colour; the parts outside are clipped.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-10.html">← Practical 10</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-12.html">Practical 12 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 11</div></footer>
+</body>
+</html>

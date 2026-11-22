@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 06 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 06</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 06 / 13</div>
+        <h1>Implementation of 2D Transformations (Translation, Rotation, Scaling, Reflection and Shearing)</h1>
+        
+      </section>
+      <section class="part" id="part-1">
+          
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To implement 2D transformations: translation, rotation, scaling, reflection and shearing.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>Enter translation (tx, ty): 100 50
+Enter rotation angle in degrees: 45
+Enter scaling factors (sx, sy): 1.5 1.5
+Enter shearing factors (shx, shy): 0.5 0.5</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-6-1">Copy code</button></div>
+            <pre id="code-6-1"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;stdio.h&gt;
+
+int cx, cy;               // screen position of the origin
+
+void drawAxes() {
+  setcolor(DARKGRAY);
+  line(0, cy, getmaxx(), cy);
+  line(cx, 0, cx, getmaxy());
+}
+
+void drawTriangle(float x[], float y[], int color) {
+  int i, j;
+  setcolor(color);
+  for (i = 0; i &lt; 3; i++) {
+    j = (i + 1) % 3;
+    line(cx + (int) x[i], cy - (int) y[i], cx + (int) x[j], cy - (int) y[j]);
+  }
+}
+
+void show(char *title, float x[], float y[], float nx[], float ny[]) {
+  cleardevice();
+  drawAxes();
+  drawTriangle(x, y, WHITE);
+  drawTriangle(nx, ny, LIGHTRED);
+  setcolor(YELLOW);
+  outtextxy(10, 10, title);
+  outtextxy(10, 25, &quot;White: Original Red: Transformed&quot;);
+  getch();
+}
+
+int main() {
+  int gd = DETECT, gm, i;
+  float x[3] = {20, 120, 70};
+  float y[3] = {20, 20, 100};
+
+
+
+ float nx[3], ny[3];
+ float tx, ty, angle, rad, sx, sy, shx, shy;
+
+ printf(&quot;Enter translation (tx, ty): &quot;);
+ scanf(&quot;%f%f&quot;, &amp;tx, &amp;ty);
+ printf(&quot;Enter rotation angle in degrees: &quot;);
+ scanf(&quot;%f&quot;, &amp;angle);
+ printf(&quot;Enter scaling factors (sx, sy): &quot;);
+ scanf(&quot;%f%f&quot;, &amp;sx, &amp;sy);
+ printf(&quot;Enter shearing factors (shx, shy): &quot;);
+ scanf(&quot;%f%f&quot;, &amp;shx, &amp;shy);
+
+ initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+ cx = getmaxx() / 2;
+ cy = getmaxy() / 2;
+
+ // 1. Translation
+ for (i = 0; i &lt; 3; i++) { nx[i] = x[i] + tx; ny[i] = y[i] + ty; }
+ show(&quot;Translation&quot;, x, y, nx, ny);
+
+ // 2. Rotation about the origin
+ rad = angle * 3.14159 / 180.0;
+ for (i = 0; i &lt; 3; i++) {
+    nx[i] = x[i] * cos(rad) - y[i] * sin(rad);
+    ny[i] = x[i] * sin(rad) + y[i] * cos(rad);
+ }
+ show(&quot;Rotation&quot;, x, y, nx, ny);
+
+ // 3. Scaling about the origin
+ for (i = 0; i &lt; 3; i++) { nx[i] = x[i] * sx; ny[i] = y[i] * sy; }
+ show(&quot;Scaling&quot;, x, y, nx, ny);
+
+ // 4. Reflection about X-axis
+ for (i = 0; i &lt; 3; i++) { nx[i] = x[i]; ny[i] = -y[i]; }
+ show(&quot;Reflection about X-axis&quot;, x, y, nx, ny);
+
+ // Reflection about Y-axis
+ for (i = 0; i &lt; 3; i++) { nx[i] = -x[i]; ny[i] = y[i]; }
+ show(&quot;Reflection about Y-axis&quot;, x, y, nx, ny);
+
+ // Reflection about the origin
+ for (i = 0; i &lt; 3; i++) { nx[i] = -x[i]; ny[i] = -y[i]; }
+ show(&quot;Reflection about Origin&quot;, x, y, nx, ny);
+
+ // 5. Shearing along X-axis
+ for (i = 0; i &lt; 3; i++) { nx[i] = x[i] + shx * y[i]; ny[i] = y[i]; }
+ show(&quot;Shearing along X-axis&quot;, x, y, nx, ny);
+
+ // Shearing along Y-axis
+ for (i = 0; i &lt; 3; i++) { nx[i] = x[i]; ny[i] = y[i] + shy * x[i]; }
+ show(&quot;Shearing along Y-axis&quot;, x, y, nx, ny);
+
+ closegraph();
+
+
+
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>For every transformation, the original triangle (white) and the transformed triangle (red) are displayed. Press any key to move to the next transformation.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-05.html">← Practical 05</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-07.html">Practical 07 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 06</div></footer>
+</body>
+</html>

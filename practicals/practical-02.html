@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 02 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 02</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 02 / 13</div>
+        <h1>Perform Animation such as Rising Sun, Moving Vehicle, Smileys, Screen saver etc.</h1>
+        
+      </section>
+      <section class="part" id="part-1">
+          
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To perform animation in C/C++ graphics: a rising sun, a moving vehicle and a bouncing smiley (screen saver).</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. Press any key to move from one animation to the next.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-2-1">Copy code</button></div>
+            <pre id="code-2-1"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;dos.h&gt;
+
+void risingSun() {
+  int y, w = getmaxx(), h = getmaxy();
+  for (y = h - 20; y &gt;= 100; y -= 2) {
+    cleardevice();
+    // Sun
+    setcolor(YELLOW);
+    setfillstyle(SOLID_FILL, YELLOW);
+    fillellipse(w / 2, y, 40, 40);
+    // Ground (drawn after the sun so the sun rises from behind it)
+    setcolor(GREEN);
+    setfillstyle(SOLID_FILL, GREEN);
+    bar(0, h - 60, w, h);
+    delay(30);
+  }
+}
+
+void movingVehicle() {
+  int x, w = getmaxx();
+  for (x = -140; x &lt; w; x += 4) {
+    cleardevice();
+    // Road
+    setcolor(WHITE);
+    line(0, 300, w, 300);
+    // Car body
+    setcolor(RED);
+    setfillstyle(SOLID_FILL, RED);
+    bar(x, 240, x + 140, 280);
+    bar(x + 30, 205, x + 110, 240);
+    // Windows
+    setfillstyle(SOLID_FILL, LIGHTCYAN);
+    bar(x + 40, 212, x + 65, 238);
+    bar(x + 75, 212, x + 100, 238);
+    // Wheels
+    setcolor(WHITE);
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    fillellipse(x + 35, 285, 15, 15);
+    fillellipse(x + 105, 285, 15, 15);
+
+
+        delay(20);
+        if (kbhit()) {
+           getch();
+           break;
+        }
+    }
+}
+
+void smiley() {
+  int x = 100, y = 100, dx = 5, dy = 4, r = 40;
+  int w = getmaxx(), h = getmaxy();
+  while (!kbhit()) {
+    cleardevice();
+    // Face
+    setcolor(YELLOW);
+    setfillstyle(SOLID_FILL, YELLOW);
+    fillellipse(x, y, r, r);
+    // Eyes and mouth
+    setcolor(BLACK);
+    setfillstyle(SOLID_FILL, BLACK);
+    fillellipse(x - 15, y - 12, 5, 7);
+    fillellipse(x + 15, y - 12, 5, 7);
+    arc(x, y + 5, 200, 340, 25);
+    // Bounce off the screen edges
+    x += dx;
+    y += dy;
+    if (x - r &lt;= 0 || x + r &gt;= w) dx = -dx;
+    if (y - r &lt;= 0 || y + r &gt;= h) dy = -dy;
+    delay(25);
+  }
+  getch();
+}
+
+int main() {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+
+    risingSun();
+    outtextxy(200, 20, &quot;Rising Sun - press any key&quot;);
+    getch();
+
+    movingVehicle();
+    outtextxy(200, 20, &quot;Moving Vehicle done - press any key&quot;);
+    getch();
+
+    smiley(); // screen saver style bouncing smiley (any key stops it)
+
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>The sun rises above the ground, then the car moves across the screen, and finally a smiley bounces around the window until a key is pressed.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-01.html">← Practical 01</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-03.html">Practical 03 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 02</div></footer>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 09 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 09</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 09 / 13</div>
+        <h1>Creation of Simple 2D and 3D Surfaces using OpenGL</h1>
+        <nav class="part-nav" aria-label="Practical sections"><a href="#part-1">a) 2D Surface Creation</a><a href="#part-2">b) 3D Surface Creation</a></nav>
+      </section>
+      <section class="part" id="part-1">
+          <h2 class="part-heading"><span>01</span>a) 2D Surface Creation</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To create simple 2D surfaces (rectangle, triangle and pentagon) using OpenGL.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-9-1">Copy code</button></div>
+            <pre id="code-9-1"><code>#include &lt;GL/glut.h&gt;
+
+void display() {
+  glClear(GL_COLOR_BUFFER_BIT);
+
+    // Rectangle surface with colour gradient
+    glBegin(GL_QUADS);
+       glColor3f(1.0, 0.0, 0.0); glVertex2f(-0.8, -0.8);
+       glColor3f(0.0, 1.0, 0.0); glVertex2f(-0.1, -0.8);
+       glColor3f(0.0, 0.0, 1.0); glVertex2f(-0.1, -0.1);
+       glColor3f(1.0, 1.0, 0.0); glVertex2f(-0.8, -0.1);
+    glEnd();
+
+    // Triangle surface
+    glBegin(GL_TRIANGLES);
+       glColor3f(1.0, 0.0, 1.0); glVertex2f(0.1, -0.8);
+       glColor3f(0.0, 1.0, 1.0); glVertex2f(0.8, -0.8);
+       glColor3f(1.0, 0.5, 0.0); glVertex2f(0.45, -0.1);
+    glEnd();
+
+    // Pentagon surface
+    glBegin(GL_POLYGON);
+       glColor3f(0.2, 0.8, 0.2);
+       glVertex2f(0.0, 0.9);
+       glVertex2f(0.45, 0.55);
+       glVertex2f(0.3, 0.1);
+       glVertex2f(-0.3, 0.1);
+       glVertex2f(-0.45, 0.55);
+    glEnd();
+
+    glFlush();
+}
+
+int main(int argc, char** argv) {
+  glutInit(&amp;argc, argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  glutInitWindowSize(500, 500);
+  glutCreateWindow(&quot;2D Surface Example&quot;);
+
+
+
+
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1, 1, -1, 1);
+
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A colour-shaded rectangle, triangle and pentagon are displayed in the OpenGL window.</p></div>
+        </section><section class="part" id="part-2">
+          <h2 class="part-heading"><span>02</span>b) 3D Surface Creation</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To create simple 3D surfaces (a solid cube and a wire-frame sphere) using OpenGL.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-9-2">Copy code</button></div>
+            <pre id="code-9-2"><code>#include &lt;GL/glut.h&gt;
+
+float angle = 0.0f;
+
+void drawCube() {
+  glBegin(GL_QUADS);
+    glColor3f(1, 0, 0); // Front
+    glVertex3f(-1, -1, 1); glVertex3f( 1, -1, 1);
+    glVertex3f( 1, 1, 1); glVertex3f(-1, 1, 1);
+    glColor3f(0, 1, 0); // Back
+    glVertex3f(-1, -1, -1); glVertex3f(-1, 1, -1);
+
+
+
+      glVertex3f( 1, 1, -1); glVertex3f( 1, -1, -1);
+      glColor3f(0, 0, 1); // Top
+      glVertex3f(-1, 1, -1); glVertex3f(-1, 1, 1);
+      glVertex3f( 1, 1, 1); glVertex3f( 1, 1, -1);
+      glColor3f(1, 1, 0); // Bottom
+      glVertex3f(-1, -1, -1); glVertex3f( 1, -1, -1);
+      glVertex3f( 1, -1, 1); glVertex3f(-1, -1, 1);
+      glColor3f(1, 0, 1); // Right
+      glVertex3f( 1, -1, -1); glVertex3f( 1, 1, -1);
+      glVertex3f( 1, 1, 1); glVertex3f( 1, -1, 1);
+      glColor3f(0, 1, 1); // Left
+      glVertex3f(-1, -1, -1); glVertex3f(-1, -1, 1);
+      glVertex3f(-1, 1, 1); glVertex3f(-1, 1, -1);
+    glEnd();
+}
+
+void display() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Solid cube surface
+    glLoadIdentity();
+    glTranslatef(-1.8f, 0.0f, -7.0f);
+    glRotatef(angle, 1.0f, 1.0f, 0.0f);
+    drawCube();
+
+    // Wire-frame sphere surface
+    glLoadIdentity();
+    glTranslatef(1.8f, 0.0f, -7.0f);
+    glRotatef(angle, 0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 1.0f, 1.0f);
+    glutWireSphere(1.2, 24, 24);
+
+    glutSwapBuffers();
+}
+
+void reshape(int w, int h) {
+  if (h == 0) h = 1;
+  glViewport(0, 0, w, h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(45.0, (double) w / h, 1.0, 100.0);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+void update(int value) {
+  angle += 1.5f;
+  if (angle &gt; 360.0f) angle -= 360.0f;
+  glutPostRedisplay();
+  glutTimerFunc(16, update, 0);
+}
+
+int main(int argc, char** argv) {
+  glutInit(&amp;argc, argv);
+
+
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(600, 500);
+    glutCreateWindow(&quot;3D Surface Example&quot;);
+
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutTimerFunc(16, update, 0);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A rotating coloured cube and a rotating wire-frame sphere are displayed in the OpenGL window.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-08.html">← Practical 08</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-10.html">Practical 10 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 09</div></footer>
+</body>
+</html>

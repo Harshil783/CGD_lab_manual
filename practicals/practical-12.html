@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 12 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 12</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 12 / 13</div>
+        <h1>Special Effects on Different Objects using OpenGL</h1>
+        
+      </section>
+      <section class="part" id="part-1">
+          
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To apply special effects (lighting, fog and blending) on different objects using OpenGL.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>Keyboard keys: F = fog on/off, L = lighting on/off, B = blending on/off, Esc = exit</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-12-1">Copy code</button></div>
+            <pre id="code-12-1"><code>#include &lt;GL/glut.h&gt;
+#include &lt;stdlib.h&gt;
+
+float angle = 0.0f;
+int fogOn = 1, lightOn = 1, blendOn = 1;
+
+void init() {
+  GLfloat lightPos[] = {2.0f, 3.0f, 4.0f, 1.0f};
+  GLfloat fogColor[] = {0.15f, 0.15f, 0.20f, 1.0f};
+
+    glClearColor(0.15f, 0.15f, 0.20f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
+
+    // Light and material
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+    // Fog
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+    glFogfv(GL_FOG_COLOR, fogColor);
+    glFogf(GL_FOG_START, 5.0f);
+    glFogf(GL_FOG_END, 14.0f);
+
+    // Blending (transparency)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void display() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glLoadIdentity();
+
+    if (lightOn) glEnable(GL_LIGHTING); else glDisable(GL_LIGHTING);
+    if (fogOn) glEnable(GL_FOG); else glDisable(GL_FOG);
+
+    // Rotating torus
+    glPushMatrix();
+    glTranslatef(-1.5f, 0.0f, -8.0f);
+    glRotatef(angle, 1.0f, 1.0f, 0.0f);
+
+
+
+    glColor3f(1.0f, 0.5f, 0.0f);
+    glutSolidTorus(0.3, 0.9, 24, 36);
+    glPopMatrix();
+
+    // Rotating cube placed far away (affected more by fog)
+    glPushMatrix();
+    glTranslatef(1.8f, 0.0f, -12.0f);
+    glRotatef(-angle, 0.0f, 1.0f, 1.0f);
+    glColor3f(0.2f, 0.8f, 0.3f);
+    glutSolidCube(1.8);
+    glPopMatrix();
+
+    // Transparent sphere in front (blending)
+    if (blendOn) {
+       glEnable(GL_BLEND);
+       glDepthMask(GL_FALSE);
+       glPushMatrix();
+       glTranslatef(-0.6f, 0.0f, -6.0f);
+       glColor4f(0.3f, 0.5f, 1.0f, 0.4f);
+       glutSolidSphere(1.2, 32, 32);
+       glPopMatrix();
+       glDepthMask(GL_TRUE);
+       glDisable(GL_BLEND);
+    }
+
+    glutSwapBuffers();
+}
+
+void reshape(int w, int h) {
+  if (h == 0) h = 1;
+  glViewport(0, 0, w, h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(45.0, (double) w / h, 1.0, 50.0);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+void keyboard(unsigned char key, int x, int y) {
+  if (key == &#x27;f&#x27; || key == &#x27;F&#x27;) fogOn = !fogOn;
+  if (key == &#x27;l&#x27; || key == &#x27;L&#x27;) lightOn = !lightOn;
+  if (key == &#x27;b&#x27; || key == &#x27;B&#x27;) blendOn = !blendOn;
+  if (key == 27) exit(0);
+}
+
+void update(int value) {
+  angle += 1.5f;
+  if (angle &gt; 360.0f) angle -= 360.0f;
+  glutPostRedisplay();
+  glutTimerFunc(16, update, 0);
+}
+
+int main(int argc, char** argv) {
+  glutInit(&amp;argc, argv);
+
+
+
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(700, 500);
+    glutCreateWindow(&quot;Special Effects: Lighting, Fog and Blending&quot;);
+
+    init();
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutTimerFunc(16, update, 0);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A lit torus, a cube fading into fog and a transparent sphere are displayed with rotation. The effects can be toggled with the keyboard.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-11.html">← Practical 11</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-13.html">Practical 13 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 12</div></footer>
+</body>
+</html>

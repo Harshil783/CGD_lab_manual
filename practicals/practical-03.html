@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 03 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 03</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 03 / 13</div>
+        <h1>DDA, Bresenham’s Line Drawing and Different Line Types</h1>
+        <nav class="part-nav" aria-label="Practical sections"><a href="#part-1">a) Implementation of Digital Differential Analyser algorithm</a><a href="#part-2">b) Implementation of Bresenham’s line drawing algorithm</a><a href="#part-3">c) Develop a program to display different types of lines.</a></nav>
+      </section>
+      <section class="part" id="part-1">
+          <h2 class="part-heading"><span>01</span>a) Implementation of Digital Differential Analyser algorithm</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To implement the Digital Differential Analyser (DDA) line drawing algorithm.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>Enter x1 and y1: 100 100
+Enter x2 and y2: 300 200</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-3-1">Copy code</button></div>
+            <pre id="code-3-1"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void DDA(int x1, int y1, int x2, int y2) {
+  int dx = x2 - x1, dy = y2 - y1, i, steps;
+  float x = x1, y = y1, xinc, yinc;
+
+    steps = abs(dx) &gt; abs(dy) ? abs(dx) : abs(dy);
+    if (steps == 0) {
+       putpixel(x1, y1, WHITE);
+       return;
+    }
+    xinc = dx / (float) steps;
+    yinc = dy / (float) steps;
+
+    for (i = 0; i &lt;= steps; i++) {
+      putpixel((int)(x + 0.5), (int)(y + 0.5), WHITE);
+      x += xinc;
+      y += yinc;
+    }
+}
+
+int main() {
+  int gd = DETECT, gm, x1, y1, x2, y2;
+
+    printf(&quot;Enter x1 and y1: &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x1, &amp;y1);
+    printf(&quot;Enter x2 and y2: &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x2, &amp;y2);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    DDA(x1, y1, x2, y2);
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A straight line is drawn from (100, 100) to (300, 200) in the graphics window.</p></div>
+        </section><section class="part" id="part-2">
+          <h2 class="part-heading"><span>02</span>b) Implementation of Bresenham’s line drawing algorithm</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To implement Bresenham’s line drawing algorithm.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>Enter x1 and y1: 100 100
+Enter x2 and y2: 300 200</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-3-2">Copy code</button></div>
+            <pre id="code-3-2"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void bresenhamLine(int x1, int y1, int x2, int y2) {
+  int dx = abs(x2 - x1), dy = abs(y2 - y1);
+  int sx = (x1 &lt; x2) ? 1 : -1;
+  int sy = (y1 &lt; y2) ? 1 : -1;
+  int err = dx - dy, e2;
+
+    while (1) {
+      putpixel(x1, y1, WHITE);
+      if (x1 == x2 &amp;&amp; y1 == y2) break;
+      e2 = 2 * err;
+      if (e2 &gt; -dy) { err -= dy; x1 += sx; }
+      if (e2 &lt; dx) { err += dx; y1 += sy; }
+    }
+}
+
+int main() {
+  int gd = DETECT, gm, x1, y1, x2, y2;
+
+
+
+
+    printf(&quot;Enter x1 and y1: &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x1, &amp;y1);
+    printf(&quot;Enter x2 and y2: &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x2, &amp;y2);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    bresenhamLine(x1, y1, x2, y2);
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A straight line is drawn from (100, 100) to (300, 200) in the graphics window.</p></div>
+        </section><section class="part" id="part-3">
+          <h2 class="part-heading"><span>03</span>c) Develop a program to display different types of lines.</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To develop a program that displays different types of lines (solid, dotted, centre, dashed, user defined and thick).</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-3-3">Copy code</button></div>
+            <pre id="code-3-3"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+
+int main() {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+
+    setlinestyle(SOLID_LINE, 0, NORM_WIDTH);
+    outtextxy(50, 70, &quot;SOLID_LINE&quot;);
+
+
+
+    line(50, 90, 300, 90);
+
+    setlinestyle(DOTTED_LINE, 0, NORM_WIDTH);
+    outtextxy(50, 120, &quot;DOTTED_LINE&quot;);
+    line(50, 140, 300, 140);
+
+    setlinestyle(CENTER_LINE, 0, NORM_WIDTH);
+    outtextxy(50, 170, &quot;CENTER_LINE&quot;);
+    line(50, 190, 300, 190);
+
+    setlinestyle(DASHED_LINE, 0, NORM_WIDTH);
+    outtextxy(50, 220, &quot;DASHED_LINE&quot;);
+    line(50, 240, 300, 240);
+
+    setlinestyle(USERBIT_LINE, 0xF0F0, NORM_WIDTH);
+    outtextxy(50, 270, &quot;USERBIT_LINE (user defined pattern)&quot;);
+    line(50, 290, 300, 290);
+
+    setlinestyle(SOLID_LINE, 0, THICK_WIDTH);
+    outtextxy(50, 320, &quot;SOLID_LINE with THICK_WIDTH&quot;);
+    line(50, 340, 300, 340);
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>Six horizontal lines are displayed, each drawn with a different line style and labelled.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-02.html">← Practical 02</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-04.html">Practical 04 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 03</div></footer>
+</body>
+</html>

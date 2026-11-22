@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d13">
+  <meta name="description" content="Computer Graphics and Design lab practicals.">
+  <title>Practical 05 | CGD Practicals</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell topbar-inner">
+    <a class="brand" href="../index.html"><span class="brand-mark">CG</span><span>COMPUTER GRAPHICS &amp; DESIGN</span></a>
+    <a class="toplink" href="../index.html">All practicals ↗</a>
+  </div></header>
+  <main class="shell">
+      <div class="crumbs"><a href="../index.html">Practical pages</a><span class="sep">/</span><span>Practical 05</span></div>
+      <section class="detail-hero">
+        <div class="detail-kicker">PRACTICAL 05 / 13</div>
+        <h1>Flood Fill and Boundary Fill Algorithms</h1>
+        <nav class="part-nav" aria-label="Practical sections"><a href="#part-1">a) Implement flood fill algorithm.</a><a href="#part-2">b) Implement boundary fill algorithm.</a></nav>
+      </section>
+      <section class="part" id="part-1">
+          <h2 class="part-heading"><span>01</span>a) Implement flood fill algorithm.</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To implement the Flood Fill algorithm.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-5-1">Copy code</button></div>
+            <pre id="code-5-1"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+
+#define MAXS 6500
+
+int stkX[MAXS], stkY[MAXS], top = -1;
+
+void push(int x, int y) {
+  if (top &lt; MAXS - 1) {
+     top++;
+     stkX[top] = x;
+     stkY[top] = y;
+  }
+}
+
+// Flood fill: replaces every connected pixel of oldColor with newColor
+void floodFill(int x, int y, int newColor, int oldColor) {
+   int cx, cy;
+   if (oldColor == newColor || getpixel(x, y) != oldColor) return;
+
+    putpixel(x, y, newColor);
+    push(x, y);
+    while (top &gt;= 0) {
+      cx = stkX[top];
+      cy = stkY[top];
+      top--;
+      if (getpixel(cx + 1, cy) == oldColor) { putpixel(cx + 1, cy, newColor); push(cx + 1, cy); }
+      if (getpixel(cx - 1, cy) == oldColor) { putpixel(cx - 1, cy, newColor); push(cx - 1, cy); }
+      if (getpixel(cx, cy + 1) == oldColor) { putpixel(cx, cy + 1, newColor); push(cx, cy + 1); }
+      if (getpixel(cx, cy - 1) == oldColor) { putpixel(cx, cy - 1, newColor); push(cx, cy - 1); }
+    }
+}
+
+int main() {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+
+    setcolor(WHITE);
+    rectangle(200, 150, 280, 230);
+    floodFill(240, 190, GREEN, BLACK); // interior colour is BLACK
+
+
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A rectangle is drawn and its interior is filled with green colour.</p></div>
+        </section><section class="part" id="part-2">
+          <h2 class="part-heading"><span>02</span>b) Implement boundary fill algorithm.</h2>
+          <div class="info-grid">
+            <article class="info-panel"><h3>Aim</h3><p>To implement the Boundary Fill algorithm.</p></article>
+            <article class="info-panel"><h3>Input</h3><p>No user input is required. All values are defined inside the program.</p></article>
+          </div>
+          <div class="code-panel">
+            <div class="code-head"><h3>Program / Code</h3><button class="copy-btn" type="button" data-copy="code-5-2">Copy code</button></div>
+            <pre id="code-5-2"><code>#include &lt;graphics.h&gt;
+#include &lt;conio.h&gt;
+
+#define MAXS 6500
+
+int stkX[MAXS], stkY[MAXS], top = -1;
+
+void push(int x, int y) {
+  if (top &lt; MAXS - 1) {
+     top++;
+     stkX[top] = x;
+     stkY[top] = y;
+  }
+}
+
+// Boundary fill: fills until the boundary colour is reached
+void boundaryFill(int x, int y, int fillColor, int boundaryColor) {
+
+
+
+    int cx, cy, c;
+    c = getpixel(x, y);
+    if (c == boundaryColor || c == fillColor) return;
+
+    putpixel(x, y, fillColor);
+    push(x, y);
+    while (top &gt;= 0) {
+      cx = stkX[top];
+      cy = stkY[top];
+      top--;
+
+        c = getpixel(cx + 1, cy);
+        if (c != boundaryColor &amp;&amp; c != fillColor) { putpixel(cx + 1, cy, fillColor); push(cx + 1, cy); }
+        c = getpixel(cx - 1, cy);
+        if (c != boundaryColor &amp;&amp; c != fillColor) { putpixel(cx - 1, cy, fillColor); push(cx - 1, cy); }
+        c = getpixel(cx, cy + 1);
+        if (c != boundaryColor &amp;&amp; c != fillColor) { putpixel(cx, cy + 1, fillColor); push(cx, cy + 1); }
+        c = getpixel(cx, cy - 1);
+        if (c != boundaryColor &amp;&amp; c != fillColor) { putpixel(cx, cy - 1, fillColor); push(cx, cy - 1); }
+    }
+}
+
+int main() {
+  int gd = DETECT, gm;
+  initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+
+    setcolor(WHITE);
+    circle(250, 200, 40);
+    boundaryFill(250, 200, RED, WHITE);
+
+    getch();
+    closegraph();
+    return 0;
+}</code></pre>
+          </div>
+          <div class="output-panel"><h3>Output</h3><p>A circle is drawn and its interior is filled with red colour up to the boundary.</p></div>
+        </section>
+      <nav class="page-nav" aria-label="Previous and next practical"><a class="nav-btn" href="practical-04.html">← Practical 04</a><a class="nav-btn" href="../index.html">⌂ All practicals</a><a class="nav-btn" href="practical-06.html">Practical 06 →</a></nav>
+    </main>
+    <footer class="footer"><div class="shell">CGD LAB · PRACTICAL 05</div></footer>
+</body>
+</html>
